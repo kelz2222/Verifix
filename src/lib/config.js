@@ -4,6 +4,8 @@
 export const ADMIN_WHATSAPP = '2349032760011';        // Artisan bookings — general VeriFix admin
 export const RESTAURANT_WHATSAPP = '2348141681402';    // Nwanyi Owerri Kitchen orders only
 
+export const SERVICE_FEE_PERCENT = 10; // TODO: confirm real percentage with client
+
 // Agency account — used for artisan booking payments.
 // TODO: replace with real account details once available.
 export const AGENCY_BANK_NAME = 'TODO: Add bank name';
