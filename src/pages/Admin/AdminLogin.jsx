@@ -13,10 +13,18 @@ export default function AdminLogin() {
   async function handleLogin() {
     setLoading(true);
     setError('');
-    const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
     if (authError) { setLoading(false); return setError(authError.message); }
 
-    const { data: adminRow } = await supabase.from('admin_users').select('*').eq('auth_user_id', data.user.id).single();
+    // Explicitly confirm the session is fully attached before querying —
+    // same fix pattern used for WorkmanLink's registration timing issue.
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (!sessionData.session) {
+      setLoading(false);
+      return setError('Could not confirm login session. Please try again.');
+    }
+
+    const { data: adminRow } = await supabase.from('admin_users').select('*').eq('auth_user_id', sessionData.session.user.id).single();
     if (!adminRow) {
       await supabase.auth.signOut();
       setLoading(false);
